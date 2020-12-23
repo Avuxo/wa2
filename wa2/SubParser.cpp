@@ -46,7 +46,7 @@ subtitle_t parseSub(std::vector<std::string>& file, int& i) {
 }
 
 std::vector<subtitle_t> parseSubs() {
-    const char* filename = "D:\\Games\\White Album 2\\todokanai\\subtitles";
+    const char* filename = Utility::getResourcePath(".\\todokanai\\font.png");
     std::vector<std::string> lines;
 
     readFile(filename, lines);
