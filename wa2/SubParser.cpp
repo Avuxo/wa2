@@ -46,7 +46,7 @@ subtitle_t parseSub(std::vector<std::string>& file, int& i) {
 }
 
 std::vector<subtitle_t> parseSubs() {
-    const char* filename = Utility::getResourcePath(".\\todokanai\\font.png");
+    const char* filename = Utility::getResourcePath(".\\todokanai\\subtitles");
     std::vector<std::string> lines;
 
     readFile(filename, lines);
