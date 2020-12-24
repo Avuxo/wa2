@@ -32,3 +32,7 @@ Subtitles take on the following format:
 5500 7000 more text more text more text^now on a new line.
 }
 ```
+
+## Debug Information
+
+There is some information about the game context as well as subtitle playback that can be displayed on screen if the project is compiled using the `_DEBUG` preprocessor definition.
