@@ -24,6 +24,9 @@ struct SubContext {
     ULONGLONG startTick;
     ULONGLONG waitTicks;
 
+    ID3DXFont* font;
+    DWORD fontColor;
+
     unsigned int subTrackIndex;
     unsigned int subIndex;
 
@@ -38,4 +41,7 @@ struct SubContext {
     void displayCurrentSubtitle();
     void update(); // called every frame by d3d9 hook
     void updateSubs();
+    
+    void drawText(int x, int y, char* text);
+    void drawDebugMenu();
 };

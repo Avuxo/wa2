@@ -3,6 +3,12 @@
 #include <d3d9.h>
 #include <d3dx9.h>
 
+#include <vector>
+
+const char LINE_BREAK = '^';
+const int SCREEN_WIDTH = 1280;
+const int CHAR_WIDTH = 20;
+
 struct TextRenderer {
     LPDIRECT3DDEVICE9 device;
     LPDIRECT3DTEXTURE9 texture;
@@ -17,8 +23,7 @@ struct TextRenderer {
     
     HRESULT init();
 
-    LPCSTR getFontPath();
-    void drawText(char* s, int x, int y);
     int getTopAdjustedGlyph(char ch, RECT *rect);
-    void renderText(char *str, int len, int x, int y);
+    void renderText(char *str, int len);
+    int calculateXOffset(char* line, int len);
 };

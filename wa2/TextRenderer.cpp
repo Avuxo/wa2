@@ -53,17 +53,41 @@ HRESULT TextRenderer::init() {
 	return result;
 }
 
+// the x-location of a subtitle is calculated using the center of the screen
+// combined with the length of the line.
+int TextRenderer::calculateXOffset(char* line, int len) {
+	// length from pointer to start of line to next line break or end of string
+	// length of current line is needed to calculate the `centering' of the string
 
+	int lineLen;
+	for (lineLen = 0; lineLen < len && line[lineLen] != LINE_BREAK; lineLen++);
 
-void TextRenderer::renderText(char *str, int len, int x, int y) {
+	// roughly calculate the center of the screen offset the center of the string
+	return (SCREEN_WIDTH - lineLen * CHAR_WIDTH) / 2;
+}
+
+void TextRenderer::renderText(char *str, int len) {
 	RECT rect;
+
+	if (len < 2) return;
+	// skip latent ' ' from parser.
+	// is this dumb... yeah, it is.
+	str++;
 
 	if (sprite && texture) {
 		sprite->Begin(D3DXSPRITE_ALPHABLEND);
-		this->pos.x = 50;
+		this->pos.x = calculateXOffset(str, len);
+		unsigned int lineOffset = 0;
 		for (int i = 0; i < len; i++) {
+			if (str[i] == LINE_BREAK) {
+				i++;
+				lineOffset += 35;
+				// find x offset for line following current char
+				this->pos.x = calculateXOffset(&str[i], len-i);
+			}
+			
 			int topAdjust = this->getTopAdjustedGlyph(str[i], &rect);
-			this->pos.y = 50 + topAdjust;
+			this->pos.y = 50 + topAdjust + lineOffset;
 			sprite->Draw(this->texture, &rect, NULL, &(this->pos), this->color);
 			this->pos.x += this->lastCharWidth - 2;
 		}
