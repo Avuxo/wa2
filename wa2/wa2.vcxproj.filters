@@ -56,9 +56,6 @@
     <ClInclude Include="font_atlas.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DebugLogger.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="SubParser.h">
       <Filter>Header Files</Filter>
     </ClInclude>

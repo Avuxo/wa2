@@ -73,6 +73,7 @@ void TextRenderer::renderText(char* str, int len) {
     // skip latent ' ' from parser.
     // is this dumb... yeah, it is.
     str++;
+    len--;
 
     if (sprite && texture) {
         sprite->Begin(D3DXSPRITE_ALPHABLEND);

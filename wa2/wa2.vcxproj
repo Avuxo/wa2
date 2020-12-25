@@ -169,7 +169,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="d3d9.h" />
-    <ClInclude Include="DebugLogger.h" />
     <ClInclude Include="font_atlas.h" />
     <ClInclude Include="GameContext.h" />
     <ClInclude Include="hook.h" />

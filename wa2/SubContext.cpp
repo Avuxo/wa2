@@ -114,9 +114,6 @@ void SubContext::displayCurrentSubtitle() {
 }
 
 void SubContext::updateSubs() {
-    int line = *GameContext::currentLine;
-    int file = *GameContext::currentFile;
-
     this->checkForTrigger();
 }
 
