@@ -35,4 +35,4 @@ Subtitles take on the following format:
 
 ## Debug Information
 
-There is some information about the game context as well as subtitle playback that can be displayed on screen if the project is compiled using the `_DEBUG` preprocessor definition.
+There is some information about the game context as well as subtitle playback that can be displayed on screen if the project is compiled using the `_TTL_DEBUG` preprocessor definition.

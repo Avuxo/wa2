@@ -34,7 +34,7 @@ SubContext::SubContext(LPDIRECT3DDEVICE9 device) {
     this->tracks = parseSubs();
 
     this->font = nullptr;
-#ifdef _DEBUG
+#ifdef _TTL_DEBUG
     // create the debug menu font
     D3DXCreateFontA(
         device,
@@ -83,7 +83,7 @@ void SubContext::checkForTrigger() {
 void SubContext::update() {
     if (!this->device) return;
 
-#ifdef _DEBUG
+#ifdef _TTL_DEBUG
     this->drawDebugMenu();
 #endif
 
