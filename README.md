@@ -1,5 +1,7 @@
 # TodokanaiTL subtitle patch
 
+![screenshot](screenshot.png)
+
 ## Setting up the project
 - obviously you need to configure this project with VS community (I use 2019)
 - You need to install DirectX 9.0 June 2010 SDK from Microsoft.
