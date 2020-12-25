@@ -20,10 +20,10 @@ struct TextRenderer {
 
     TextRenderer();
     TextRenderer(LPDIRECT3DDEVICE9);
-    
+
     HRESULT init();
 
-    int getTopAdjustedGlyph(char ch, RECT *rect);
-    void renderText(char *str, int len);
+    int getTopAdjustedGlyph(char ch, RECT* rect);
+    void renderText(char* str, int len);
     int calculateXOffset(char* line, int len);
 };

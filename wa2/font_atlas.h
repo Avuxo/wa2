@@ -13,7 +13,7 @@ extern "C" {
         int codePoint, x, y, width, height, topAdjust;
     } Character;
 
-    
+
     static Character fontAtlas[] = {
       {' ', 339, 141, 19, 3, 0},
       {'!', 118, 108, 15, 33, 0},

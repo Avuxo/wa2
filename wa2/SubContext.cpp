@@ -25,7 +25,7 @@ SubContext::SubContext(LPDIRECT3DDEVICE9 device) {
     this->renderer = TextRenderer(this->device);
 
     this->playing = false;
-    
+
     HRESULT result = this->renderer.init();
     if (FAILED(result)) {
         MessageBoxA(0, "Failed to load Todokanai Font file, will run without extra text functionality.", "Todokanai Error", 0);
@@ -71,10 +71,10 @@ void SubContext::checkForTrigger() {
         if (tracks[i].startFile == file && tracks[i].startLine == line) {
             this->playing = true;
             this->startTick = GetTickCount64();
-            
+
             this->subTrackIndex = i;
             this->subIndex = 0;
-            
+
             return;
         }
     }
@@ -108,7 +108,7 @@ void SubContext::displayCurrentSubtitle() {
     this->renderer.renderText(
         // TODO: pull this `calculation' out so that the precomputed c-str representation
         //       is already available and it doesn't need to have this double dereference every frame
-        (char*) text.c_str(),
+        (char*)text.c_str(),
         text.length()
     );
 }

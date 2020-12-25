@@ -35,68 +35,69 @@ SubContext subContext;
 // called for every new line loaded (and loads / quick loads; works with auto/skip)
 // line is the loaded line of text... i don't know what the int is, it's a flag of some sort.
 void __cdecl incrementHook(char* line, int unknown) {
-	if (subContext.device)
-		subContext.updateSubs();
-	
-	originalIncrementCb(line, unknown);
+    if (subContext.device)
+        subContext.updateSubs();
+
+    originalIncrementCb(line, unknown);
 }
 
 
 // called every frame (entry into the draw loop)
 void __stdcall endSceneHook(LPDIRECT3DDEVICE9 originalDevice) {
-	if (!device) {
-		device = originalDevice;
-	}
+    if (!device) {
+        device = originalDevice;
+    }
 
-	if (!subContext.device) {
-		subContext = SubContext(device);
-	}
+    if (!subContext.device) {
+        subContext = SubContext(device);
+    }
 
-	subContext.update();
+    subContext.update();
 
-	originalEndSceneCB(device);
+    originalEndSceneCB(device);
 }
 
 // obviously this works with a lot of nasty global state here, so it's crucial that this is called AFTER the memory
 // for the d3ddevice is establshed AND the device has already been obtained.
 // I'm pretty sure the order in which hooks are installed doesn't really matter.
 static void setupHooks() {
-	originalEndSceneCB = (endscene_t)installHook(
-		(char*)d3dDevice[42],
-		(char*)endSceneHook,
-		7
-	);
+    originalEndSceneCB = (endscene_t)installHook(
+        (char*)d3dDevice[42],
+        (char*)endSceneHook,
+        7
+    );
 
-	originalIncrementCb = (increment_sub_cb_t)installHook(
-		(char*)0x004034C0, // address of original function to increment "relative" script index
-		(char*)incrementHook,
-		8
-	);
+    originalIncrementCb = (increment_sub_cb_t)installHook(
+        (char*)0x004034C0, // address of original function to increment "relative" script index
+        (char*)incrementHook,
+        8
+    );
 }
 
 /*
-	Does the todokanai directory exist in the root of the project?
-	This directory contains both patch config and assets.
+    Does the todokanai directory exist in the root of the project?
+    This directory contains both patch config and assets.
 */
 static inline bool doesTodokanaiDirectoryExist() {
-	return !(GetFileAttributesA(".\\todokanai") == INVALID_FILE_ATTRIBUTES);
+    return !(GetFileAttributesA(".\\todokanai") == INVALID_FILE_ATTRIBUTES);
 }
 
 
 // injection entrypoint
 DWORD WINAPI entry(HMODULE hInst) {
-	if (doesTodokanaiDirectoryExist()) {
-		// remove hooks and uninject DLL.
-		if (tryToGetDevice(d3dDevice, sizeof(d3dDevice))) {
-			setupHooks();
-		}
+    if (doesTodokanaiDirectoryExist()) {
+        // remove hooks and uninject DLL.
+        if (tryToGetDevice(d3dDevice, sizeof(d3dDevice))) {
+            setupHooks();
+        }
 
-		for (;;) { Sleep(1); }
-	} else {
-		MessageBoxA(0, "Todokanai Resources missing. Does the 'todokanai' directory exist in the White Album 2 Root?", "Todokanai Error", 0);
-	}
+        for (;;) { Sleep(1); }
+    }
+    else {
+        MessageBoxA(0, "Todokanai Resources missing. Does the 'todokanai' directory exist in the White Album 2 Root?", "Todokanai Error", 0);
+    }
 
-	FreeLibraryAndExitThread(hInst, 0);
+    FreeLibraryAndExitThread(hInst, 0);
 }
 
 // ideally this state would be stored inside of the main hook context, but there's a slim chance
@@ -104,9 +105,9 @@ DWORD WINAPI entry(HMODULE hInst) {
 bool hasAttached = false;
 
 BOOL WINAPI DllMain(HINSTANCE hInst, DWORD reason, LPVOID reserved) {
-	if (!hasAttached && reason == DLL_PROCESS_ATTACH) {
-		CloseHandle(CreateThread(0, 0, (LPTHREAD_START_ROUTINE)entry, hInst, 0, 0));
-		hasAttached = true;
-	}
-	return TRUE;
+    if (!hasAttached && reason == DLL_PROCESS_ATTACH) {
+        CloseHandle(CreateThread(0, 0, (LPTHREAD_START_ROUTINE)entry, hInst, 0, 0));
+        hasAttached = true;
+    }
+    return TRUE;
 }
