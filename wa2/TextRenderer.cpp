@@ -69,12 +69,6 @@ int TextRenderer::calculateXOffset(char* line, int len) {
 void TextRenderer::renderText(char* str, int len) {
     RECT rect;
 
-    if (len < 2) return;
-    // skip latent ' ' from parser.
-    // is this dumb... yeah, it is.
-    str++;
-    len--;
-
     if (sprite && texture) {
         sprite->Begin(D3DXSPRITE_ALPHABLEND);
         this->pos.x = calculateXOffset(str, len);

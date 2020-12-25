@@ -37,6 +37,11 @@ subtitle_t parseSub(std::vector<std::string>& file, int& i) {
 
         std::getline(lineStream, text);
 
+        // remove ' ' at the start of string from parser since getline() will
+        // just give the remainder of the stringstream and the last stream read
+        // didn't trim the last space.
+        text = text.substr(1, text.length() - 1);
+
         lines.emplace_back(line_t(start, length, text));
     }
 

@@ -18,7 +18,10 @@ Please note that <b>ALL</b> subtitles must be ASCII. That means that MS elipse c
 
 The carat character `^` is a linebreak, to make it look right, don't use any spaces surrounding it.
 
+Any line that is not `{`, `}`, or inside of a sub block will be ignored and can be used for commenting.
+
 Subtitles take on the following format:
+
 
 ```
 {
