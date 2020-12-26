@@ -20,6 +20,8 @@ The carat character `^` is a linebreak, to make it look right, don't use any spa
 
 Any line that is not `{`, `}`, or inside of a sub block will be ignored and can be used for commenting.
 
+At this time there is no support for multiple subtitles being on screen at the same time, this could be added if it turns out to be necessary.
+
 Subtitles take on the following format:
 
 
