@@ -5,12 +5,16 @@
 #include "SubParser.h"
 #include "Utility.h"
 
-void readFile(const char* filename, std::vector<std::string>& v) {
+void readFile(const char* filename, std::vector<std::string>& lines) {
     std::ifstream file(filename);
 
-    std::string l;
-    while (std::getline(file, l)) {
-        v.push_back(l);
+    if (!file.is_open()) {
+        MessageBoxA(0, "Todokanai Resources missing. Does the 'todokanai' directory contain a file named 'subtitles'?", "Todokanai Error", 0);
+    }
+
+    std::string line;
+    while (std::getline(file, line)) {
+        lines.push_back(line);
     }
 }
 
