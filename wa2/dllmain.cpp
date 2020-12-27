@@ -95,8 +95,7 @@ DWORD WINAPI entry(HMODULE hInst) {
         }
 
         for (;;) { Sleep(1); }
-    }
-    else {
+    } else {
         MessageBoxA(0, "Todokanai Resources missing. Does the 'todokanai' directory exist in the White Album 2 Root?", "Todokanai Error", 0);
     }
 

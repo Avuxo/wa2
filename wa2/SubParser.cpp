@@ -8,6 +8,10 @@
 void readFile(const char* filename, std::vector<std::string>& lines) {
     std::ifstream file(filename);
 
+    // PLEASE NOTE: This log is just for the user, it doesn't actually change how the
+    // program will execute. As it stands, there's no nice clean-exit for us since
+    // this is technically DirectX 9 as far as the game is concerned.
+    // please note the lack of a return here. This is intentional
     if (!file.is_open()) {
         MessageBoxA(0, "Todokanai Resources missing. Does the 'todokanai' directory contain a file named 'subtitles'?", "Todokanai Error", 0);
     }
