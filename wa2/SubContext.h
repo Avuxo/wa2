@@ -7,10 +7,6 @@
 #include "TextRenderer.h"
 #include "SubParser.h"
 
-#define GET_SCRIPT_LINE(n) (n >> 16)
-#define GET_SCRIPT_FILE(n) (n & 0xFFFF)
-#define TRIGGER_FORM(n1, n2) ((n1 << 16) | n2)
-
 /*
     Context object for the subtitling system.
     This is intended to be used as a singleton, initialized
@@ -30,7 +26,6 @@ struct SubContext {
     unsigned int subTrackIndex;
     unsigned int subIndex;
 
-    // mappings of line:trackList[i]
     std::vector<subtitle_t> tracks;
 
     bool playing;

@@ -44,13 +44,15 @@ Subtitles take on the following format:
 
 Although the majority of this patch is dedicated to adding subtitle support to White Album 2's engine, the core is a relatively abstract hooking solution which takes advantage of simple [trampolining](https://en.wikipedia.org/wiki/Trampoline_(computing)) and [DLL proxying](https://kevinalmansa.github.io/application%20security/DLL-Proxying/) (targeting d3d9.dll).
 
-There's a function in `wa2/dllmain.cpp` called `setupHooks()` that installs all of the hooks for the project. It takes 3 arguments: the address of the function to patch, the callback for the hook (see below), and the size (in bytes) that will be overwritten and thus must be reallocated inside of the trampoline.
+There's a function in `wa2/dllmain.cpp` called `setupHooks()` that installs all of the hooks for the project. It takes 3 arguments: the address of the function to patch, the callback for the hook (see below), and the size (in bytes) that will be overwritten and thus must be reallocated inside of the trampoline. Both of these values can be found pretty quickly using IDA and Cheat Engine in conjunction using `Find out what [...] this address`.
 
 As it stands, all of the state is just being stored at the top of the file for simplicity's sake but if this project expands, that might need to be put into a state construct.
 
 ### Hook function:
 
-The hook function _must_ return `void`, _must_ take the arguments of the original function, and _must_ call into the original. It should not do any returning because when the `ret` instruction is called, a second return in _your_ function will cause the pointer it returns to to be messed up. See both `incrementHook`, and `endSceneHook` for examples of this done right. 
+If the hook function is to run _before_ the original, it should return _void_ and call the original as the last step with no return being called. If the function is to run _after_ the original, it should return the type of the original function, call the function _first_, store the return value, perform hooked actions, and then finally return the original return value.
+
+The function _must_ take the arguments of the original function and _must_ call into the original. It should not do any returning because when the `ret` instruction is called, a second return in _your_ function will cause the pointer it returns to to be messed up. See both `setLineHook`, and `endSceneHook` for examples of this done right. 
 
 Also note that MS calling conventions must be adhered to for the function you're calling into to make sure the call stack is organized in the manner you expect. It should be pretty easy to tell with a debugger and most disassemblers will outright tell you the full signature (calling convention and all).
 

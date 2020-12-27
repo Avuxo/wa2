@@ -1,7 +1,6 @@
 #include "SubContext.h"
 #include "GameContext.h"
 
-#include <stdlib.h>
 
 SubContext::SubContext() {
     this->device = nullptr;
@@ -127,22 +126,21 @@ void SubContext::drawText(int x, int y, char* text) {
 // draw an on-screen debug screen so that i can monitor values while
 // debugging
 void SubContext::drawDebugMenu() {
-    char* ticksString = (char*)malloc(sizeof(char) * 64);
-    sprintf_s(ticksString, sizeof(char) * 64, "ticks: %llu", GetTickCount64() - this->startTick);
-    char* playingString = (char*)malloc(sizeof(char) * 13);
-    sprintf_s(playingString, sizeof(char) * 13, "playing: %s", this->playing ? "yes" : "no");
+    if (this->playing) {
+        char ticksString[64];
+        sprintf_s(ticksString, sizeof(char) * 64, "Ticks: %llu", GetTickCount64() - this->startTick);
+        this->drawText(50, 50, ticksString);
+    }
+    
+    char playingString[13];
+    sprintf_s(playingString, sizeof(char) * 13, "Playing: %s", this->playing ? "yes" : "no");
 
     const long currentLine = *((long*)0xA391E8);
     const long currentFile = *((long*)0x4BE4CC);
 
-    char* scriptString = (char*)malloc(sizeof(char) * 64);
+    char scriptString[64];
     sprintf_s(scriptString, sizeof(char) * 64, "Script: %d:%d", currentFile, currentLine);
 
-    this->drawText(50, 50, ticksString);
     this->drawText(50, 65, playingString);
     this->drawText(50, 80, scriptString);
-
-    free(ticksString);
-    free(playingString);
-    free(scriptString);
 }

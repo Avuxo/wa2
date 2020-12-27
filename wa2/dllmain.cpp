@@ -9,6 +9,7 @@
 #include "hook.h"
 #include "d3d9.h"
 #include "SubContext.h"
+#include "GameContext.h"
 
 #pragma comment(lib, "d3d9.lib")
 #pragma comment(lib, "d3dx9.lib")
@@ -17,12 +18,12 @@
 // if the hooks exceed more than just a couple I'll think about using something a little more...
 // void pointer-y
 typedef HRESULT(APIENTRY* endscene_t)(LPDIRECT3DDEVICE9 device);
-typedef int(__cdecl* increment_sub_cb_t)(char*, int);
+typedef int(__cdecl* set_line_cb_t)(signed int);
 
 
 // original callbacks
 endscene_t originalEndSceneCB = nullptr;
-increment_sub_cb_t originalIncrementCb = nullptr;
+set_line_cb_t originalLineWriteCb = nullptr;
 
 
 // d3d9 vtable and device (captured in hooks)
@@ -32,13 +33,15 @@ LPDIRECT3DDEVICE9 device;
 // main context for subtitling work
 SubContext subContext;
 
+
 // called for every new line loaded (and loads / quick loads; works with auto/skip)
 // line is the loaded line of text... i don't know what the int is, it's a flag of some sort.
-void __cdecl incrementHook(char* line, int unknown) {
+int __cdecl setLineHook(signed int a1) {
+    int rv = originalLineWriteCb(a1);
     if (subContext.device)
         subContext.updateSubs();
-
-    originalIncrementCb(line, unknown);
+    
+    return rv;
 }
 
 
@@ -67,10 +70,10 @@ static void setupHooks() {
         7
     );
 
-    originalIncrementCb = (increment_sub_cb_t)installHook(
-        (char*)0x004034C0, // address of original function to increment "relative" script index
-        (char*)incrementHook,
-        8
+    originalLineWriteCb = (set_line_cb_t)installHook(
+        (char*)0x00405180,
+        (char*)setLineHook,
+        5
     );
 }
 
