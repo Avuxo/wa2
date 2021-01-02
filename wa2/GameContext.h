@@ -4,5 +4,6 @@
 namespace GameContext {
     volatile int* const currentLine = (int*)0xA391E8;
     volatile int* const currentFile = (int*)0x4BE4CC;
-    volatile int* const inHScene = (int*)0x4D2D20; // bool
+    volatile int* const inHScene    = (int*)0x4D2D20; // bool
+    volatile int* const skipping    = (int*)0x4BE018; // bool
 }

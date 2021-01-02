@@ -24,11 +24,10 @@ At this time there is no support for multiple subtitles being on screen at the s
 
 Subtitles take on the following format:
 
-
 ```
 {
 1002 305 1002 307
-500 5000 This text will be displayed from 500 ms from the^trigger until 5000ms from the trigger
+500 5000 This text will be displayed from 500 ms from the^trigger until 5500ms from the start
 5500 7000 the trigger is the 4 numbers at the top: start_file^start_line end_file end_line
 7500 8500 There's no hard limit on subtitle length etc.
 }
@@ -39,6 +38,8 @@ Subtitles take on the following format:
 5500 7000 more text more text more text^now on a new line.
 }
 ```
+
+Each line is `[start ms] [duration ms] text until newline`
 
 ## Adding new functionality
 

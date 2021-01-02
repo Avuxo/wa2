@@ -25,6 +25,11 @@ SubContext::SubContext(LPDIRECT3DDEVICE9 device) {
 
     this->playing = false;
 
+    // logically, -1 would be used here but those are actually the signed default
+    // values when the game is launched.
+    this->currentPlayingFile = UNLOADED_LINE;
+    this->currentPlayingFile = UNLOADED_LINE;
+
     HRESULT result = this->renderer.init();
     if (FAILED(result)) {
         MessageBoxA(0, "Failed to load Todokanai Font file, will run without extra text functionality.", "Todokanai Error", 0);
@@ -57,6 +62,13 @@ void SubContext::checkForTrigger() {
     int line = *GameContext::currentLine;
     int file = *GameContext::currentFile;
 
+    // these values want to be unloaded consistently to make sure that no detritus
+    // is retained between saves/loads/normal play.
+    if (!playing && this->currentPlayingFile != UNLOADED_LINE || this->currentPlayingLine != UNLOADED_LINE) {
+        this->currentPlayingFile = UNLOADED_LINE;
+        this->currentPlayingFile = UNLOADED_LINE;
+    }
+
     // in defense of this lame linear search, this only iterates over each
     // sub _track_, not each line and more importantly, it's only triggered
     // on each new line of dialogue, not every frame.
@@ -67,9 +79,17 @@ void SubContext::checkForTrigger() {
             // can be the start of another.
         }
 
-        if (tracks[i].startFile == file && tracks[i].startLine == line) {
+        if (!playing && 
+            tracks[i].startFile == file && 
+            tracks[i].startLine == line &&
+            // see comment in header for more info on this.
+            (this->currentPlayingFile != file && this->currentPlayingLine != line)
+        ) {
             this->playing = true;
             this->startTick = GetTickCount64();
+
+            this->currentPlayingLine = line;
+            this->currentPlayingFile = file;
 
             this->subTrackIndex = i;
             this->subIndex = 0;
@@ -129,7 +149,12 @@ void SubContext::drawDebugMenu() {
     if (this->playing) {
         char ticksString[64];
         sprintf_s(ticksString, sizeof(char) * 64, "Ticks: %llu", GetTickCount64() - this->startTick);
-        this->drawText(50, 50, ticksString);
+        this->drawText(50, 80, ticksString);
+
+        std::vector<line_t> lines = this->tracks[this->subTrackIndex].lines;
+        char currentInfoString[64];
+        sprintf_s(currentInfoString, sizeof(char) * 64, "Start tick: %llu | End tick: %llu", lines[this->subIndex].start, lines[this->subIndex].end);
+        this->drawText(50, 95, currentInfoString);
     }
     
     char playingString[13];
@@ -141,6 +166,6 @@ void SubContext::drawDebugMenu() {
     char scriptString[64];
     sprintf_s(scriptString, sizeof(char) * 64, "Script: %d:%d", currentFile, currentLine);
 
-    this->drawText(50, 65, playingString);
-    this->drawText(50, 80, scriptString);
+    this->drawText(50, 50, playingString);
+    this->drawText(50, 65, scriptString);
 }
