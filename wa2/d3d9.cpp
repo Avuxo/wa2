@@ -92,8 +92,11 @@ bool getDXDevice(void** vtable, size_t size) {
 bool tryToGetDevice(void** vtable, size_t size) {
     unsigned int tries = 0;
     bool result = false;
-    Sleep(1500);
-    result = getDXDevice(vtable, size);
+    while (!result && tries < MAX_TRIES) {
+        result = getDXDevice(vtable, size);
+        Sleep(100);
+        tries++;
+    }
 
     return result;
 }

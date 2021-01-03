@@ -69,6 +69,13 @@ void SubContext::checkForTrigger() {
         this->currentPlayingFile = UNLOADED_LINE;
     }
 
+    // NOTE: assumes that sub tracks only span one file.
+    // handles the case when a user loads a save while a subtrack is playing.
+    // note: 
+    if (playing && this->currentPlayingFile != file && line != 0 && line < tracks[this->subTrackIndex].startLine || line > tracks[this->subTrackIndex].endLine) {
+        this->playing = false;
+    }
+
     // in defense of this lame linear search, this only iterates over each
     // sub _track_, not each line and more importantly, it's only triggered
     // on each new line of dialogue, not every frame.
@@ -117,6 +124,10 @@ void SubContext::update() {
         if (ticks > lines[this->subIndex].end) {
             if (this->subIndex < lines.size()) {
                 this->subIndex++;
+            } else {
+                if (ticks > lines[this->subIndex].end) {
+                    this->playing = false;
+                }
             }
         }
     }
@@ -147,15 +158,15 @@ void SubContext::drawText(int x, int y, char* text) {
 // debugging
 void SubContext::drawDebugMenu() {
     if (this->playing) {
-        char ticksString[64];
-        sprintf_s(ticksString, sizeof(char) * 64, "Ticks: %llu", GetTickCount64() - this->startTick);
-        this->drawText(50, 80, ticksString);
-
         std::vector<line_t> lines = this->tracks[this->subTrackIndex].lines;
         char currentInfoString[64];
         sprintf_s(currentInfoString, sizeof(char) * 64, "Start tick: %llu | End tick: %llu", lines[this->subIndex].start, lines[this->subIndex].end);
         this->drawText(50, 95, currentInfoString);
     }
+
+    char ticksString[64];
+    sprintf_s(ticksString, sizeof(char) * 64, "Ticks: %llu", GetTickCount64() - this->startTick);
+    this->drawText(50, 80, ticksString);
     
     char playingString[13];
     sprintf_s(playingString, sizeof(char) * 13, "Playing: %s", this->playing ? "yes" : "no");
