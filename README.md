@@ -14,6 +14,8 @@ Additionally, create a folder called `todokanai` in the root of the White Album 
 
 In the `White Album 2\todokanai` folder, there needs to be two files, the first being the font atlas `font.png` and the second being simply titled `subtitles` (no extension).
 
+The trigger for any given sub track is the audio ID of the resource loaded for the background audio track. The debug menu will tell you whatever the most recently loaded audio track is which you can use to write your subs. This will be some 0-4 digit ID.
+
 Please note that <b>ALL</b> subtitles must be ASCII. That means that MS elipse characters, MS single quotes, and MS double quotes must be replaced with `...`, `'`, and `"` respectively.
 
 The carat character `^` is a linebreak, to make it look right, don't use any spaces surrounding it.
@@ -26,14 +28,14 @@ Subtitles take on the following format:
 
 ```
 {
-1002 305 1002 307
+9805 1002 307
 500 5000 This text will be displayed from 500 ms from the^trigger until 5500ms from the start
-5500 7000 the trigger is the 4 numbers at the top: start_file^start_line end_file end_line
+5500 7000 the trigger is the 3 numbers at the top: audio trigger^end_file end_line
 7500 8500 There's no hard limit on subtitle length etc.
 }
 
 {
-1003 409 1003 410
+9703 1003 410
 500 5000 etc etc etc
 5500 7000 more text more text more text^now on a new line.
 }

@@ -25,10 +25,7 @@ SubContext::SubContext(LPDIRECT3DDEVICE9 device) {
 
     this->playing = false;
 
-    // logically, -1 would be used here but those are actually the signed default
-    // values when the game is launched.
-    this->currentPlayingFile = UNLOADED_LINE;
-    this->currentPlayingFile = UNLOADED_LINE;
+    this->lastSoundPlayed = -1;
 
     HRESULT result = this->renderer.init();
     if (FAILED(result)) {
@@ -58,45 +55,27 @@ SubContext::SubContext(LPDIRECT3DDEVICE9 device) {
 #endif
 }
 
-void SubContext::checkForTrigger() {
+void SubContext::checkForTrigger(int audioId) {
     int line = *GameContext::currentLine;
     int file = *GameContext::currentFile;
 
-    // these values want to be unloaded consistently to make sure that no detritus
-    // is retained between saves/loads/normal play.
-    if (!playing && this->currentPlayingFile != UNLOADED_LINE || this->currentPlayingLine != UNLOADED_LINE) {
-        this->currentPlayingFile = UNLOADED_LINE;
-        this->currentPlayingFile = UNLOADED_LINE;
-    }
-
-    // NOTE: assumes that sub tracks only span one file.
-    // handles the case when a user loads a save while a subtrack is playing.
-    // note: 
-    if (playing && this->currentPlayingFile != file && line != 0 && line < tracks[this->subTrackIndex].startLine || line > tracks[this->subTrackIndex].endLine) {
-        this->playing = false;
-    }
+    this->lastSoundPlayed = audioId;
 
     // in defense of this lame linear search, this only iterates over each
     // sub _track_, not each line and more importantly, it's only triggered
     // on each new line of dialogue, not every frame.
     for (unsigned int i = 0; i < tracks.size(); i++) {
+        // check for end
         if (playing && tracks[i].endFile == file && tracks[i].endLine == line) {
             this->playing = false;
             // no breaking condition here to account for the fact that the end of one sub
             // can be the start of another.
         }
 
-        if (!playing && 
-            tracks[i].startFile == file && 
-            tracks[i].startLine == line &&
-            // see comment in header for more info on this.
-            (this->currentPlayingFile != file && this->currentPlayingLine != line)
-        ) {
+        // check for start
+        if (!playing && audioId == tracks[i].triggerId) {
             this->playing = true;
             this->startTick = GetTickCount64();
-
-            this->currentPlayingLine = line;
-            this->currentPlayingFile = file;
 
             this->subTrackIndex = i;
             this->subIndex = 0;
@@ -143,10 +122,6 @@ void SubContext::displayCurrentSubtitle() {
     );
 }
 
-void SubContext::updateSubs() {
-    this->checkForTrigger();
-}
-
 // this is used to draw debug text.
 void SubContext::drawText(int x, int y, char* text) {
     RECT rect;
@@ -164,9 +139,11 @@ void SubContext::drawDebugMenu() {
         this->drawText(50, 95, currentInfoString);
     }
 
+    char audioIdString[64];
+    sprintf_s(audioIdString, sizeof(char) * 64, "Last Loaded Audio ID: %d", this->lastSoundPlayed);
+
     char ticksString[64];
     sprintf_s(ticksString, sizeof(char) * 64, "Ticks: %llu", GetTickCount64() - this->startTick);
-    this->drawText(50, 80, ticksString);
     
     char playingString[13];
     sprintf_s(playingString, sizeof(char) * 13, "Playing: %s", this->playing ? "yes" : "no");
@@ -177,6 +154,9 @@ void SubContext::drawDebugMenu() {
     char scriptString[64];
     sprintf_s(scriptString, sizeof(char) * 64, "Script: %d:%d", currentFile, currentLine);
 
+
+    this->drawText(50, 35, audioIdString);
     this->drawText(50, 50, playingString);
     this->drawText(50, 65, scriptString);
+    this->drawText(50, 80, ticksString);
 }

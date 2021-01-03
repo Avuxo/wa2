@@ -31,8 +31,8 @@ subtitle_t parseSub(std::vector<std::string>& file, int& i) {
     i++; // skip {
 
     // parse out the trigger info
-    unsigned int startFile, startLine, endFile, endLine;
-    std::stringstream(file[i]) >> startFile >> startLine >> endFile >> endLine;
+    unsigned int audioId, endFile, endLine;
+    std::stringstream(file[i]) >> audioId >> endFile >> endLine;
     i++;
 
     for (; i < file.size() && file[i][0] != '}'; i++) {
@@ -53,7 +53,7 @@ subtitle_t parseSub(std::vector<std::string>& file, int& i) {
         lines.emplace_back(line_t(start, length, text));
     }
 
-    subtitle_t track(lines, startFile, startLine, endFile, endLine);
+    subtitle_t track(lines, audioId, endFile, endLine);
 
     return track;
 }

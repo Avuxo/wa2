@@ -19,16 +19,15 @@ struct line_t {
 
 struct subtitle_t {
     subtitle_t() {}
-    subtitle_t(std::vector<line_t> lines, unsigned int startFile, unsigned startLine, unsigned endFile, unsigned endLine) {
+    subtitle_t(std::vector<line_t> lines, int triggerId, unsigned int endFile, unsigned int endLine) {
         this->lines = lines;
-        this->startFile = startFile;
-        this->startLine = startLine;
+        this->triggerId = triggerId;
         this->endFile = endFile;
         this->endLine = endLine;
     }
 
     std::vector<line_t> lines;
-    unsigned int startFile, startLine, endFile, endLine;
+    unsigned int triggerId, endFile, endLine;
 };
 
 std::vector<subtitle_t> parseSubs();
