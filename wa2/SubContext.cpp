@@ -34,6 +34,8 @@ SubContext::SubContext(LPDIRECT3DDEVICE9 device) {
 
     this->tracks = parseSubs();
 
+    this->lastSoundPlayedType = "";
+
     this->font = nullptr;
 #ifdef _TTL_DEBUG
     // create the debug menu font
@@ -55,16 +57,23 @@ SubContext::SubContext(LPDIRECT3DDEVICE9 device) {
 #endif
 }
 
-void SubContext::checkForTrigger(int audioId) {
+void SubContext::checkForTrigger(int audioId, AudioType type) {
     int line = *GameContext::currentLine;
     int file = *GameContext::currentFile;
 
     this->lastSoundPlayed = audioId;
+    // is this ideal? absolutely not. However, it's only being used for debug output
+    // and I even put it in a conditional compile macro so that this won't cause problems
+    // upon release (since this is just some bullshit)
+#ifdef _TTL_DEBUG
+    this->lastSoundPlayedType = audioTypeStrings[(int)type];
+#endif
 
     // in defense of this lame linear search, this only iterates over each
     // sub _track_, not each line and more importantly, it's only triggered
     // on each new line of dialogue, not every frame.
-    for (unsigned int i = 0; i < tracks.size(); i++) {
+    size_t len = tracks.size();
+    for (unsigned int i = 0; i < len; i++) {
         // check for end
         if (playing && tracks[i].endFile == file && tracks[i].endLine == line) {
             this->playing = false;
@@ -73,16 +82,27 @@ void SubContext::checkForTrigger(int audioId) {
         }
 
         // check for start
-        if (!playing && audioId == tracks[i].triggerId) {
-            this->playing = true;
-            this->startTick = GetTickCount64();
-
-            this->subTrackIndex = i;
-            this->subIndex = 0;
-
-            return;
+        if (type == SOUND_EFFECT) {
+            if (!playing && audioId == tracks[i].triggerId) {
+                this->play(i, type);
+                return;
+            }
+        } else if (type == VOICE) {
+            if (!playing && file == tracks[i].triggerFile && audioId == tracks[i].triggerLine) {
+                this->play(i, type);
+                return;
+            }
         }
     }
+}
+
+void SubContext::play(int trackIndex, AudioType type) {
+    this->playing = true;
+    this->startTick = GetTickCount64();
+
+    this->subTrackIndex = trackIndex;
+    this->subIndex = 0;
+
 }
 
 void SubContext::update() {
@@ -142,8 +162,8 @@ void SubContext::drawDebugMenu() {
         this->drawText(50, 95, currentInfoString);
     }
 
-    char audioIdString[64];
-    sprintf_s(audioIdString, sizeof(char) * 64, "Last Loaded Audio ID: %d", this->lastSoundPlayed);
+    char audioIdString[128];
+    sprintf_s(audioIdString, sizeof(char) * 128, "Last Loaded Audio ID: %s:%d", this->lastSoundPlayedType, this->lastSoundPlayed);
 
     char ticksString[64];
     sprintf_s(ticksString, sizeof(char) * 64, "Ticks: %llu", GetTickCount64() - this->startTick);

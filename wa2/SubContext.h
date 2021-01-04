@@ -7,7 +7,14 @@
 #include "TextRenderer.h"
 #include "SubParser.h"
 
-#define UNLOADED_LINE -2
+enum AudioType {
+    BGM = 0, VOICE = 1, SOUND_EFFECT = 2
+};
+
+// used for debug output
+static const char* audioTypeStrings[] {
+    "BGM", "VOICE", "SOUND EFFECT"
+};
 
 /*
     Context object for the subtitling system.
@@ -29,6 +36,7 @@ struct SubContext {
     unsigned int subIndex;
     
     int lastSoundPlayed;
+    const char* lastSoundPlayedType;
 
     std::vector<subtitle_t> tracks;
 
@@ -36,8 +44,9 @@ struct SubContext {
 
     SubContext();
     SubContext(LPDIRECT3DDEVICE9 device);
-    void checkForTrigger(int audioId);
+    void checkForTrigger(int audioId, AudioType type);
     void displayCurrentSubtitle();
+    void play(int trackIndex, AudioType type);
     void update(); // called every frame by d3d9 hook
 
     void drawText(int x, int y, char* text);

@@ -6,4 +6,5 @@ namespace GameContext {
     volatile int* const currentFile = (int*)0x4BE4CC;
     volatile int* const inHScene    = (int*)0x4D2D20; // bool
     volatile int* const skipping    = (int*)0x4BE018; // bool
+    volatile int* const voiceOffset = (int*)0xA391EC; // offset that seems to always be 0
 }

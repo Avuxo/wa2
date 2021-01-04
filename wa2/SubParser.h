@@ -2,7 +2,10 @@
 
 #include <Windows.h>
 #include <vector>
+
 #define MAX_LINE_LENGTH 2048
+
+#define UNLOADED_LINE -2
 
 struct line_t {
     line_t() {}
@@ -19,15 +22,26 @@ struct line_t {
 
 struct subtitle_t {
     subtitle_t() {}
-    subtitle_t(std::vector<line_t> lines, int triggerId, unsigned int endFile, unsigned int endLine) {
+    subtitle_t(std::vector<line_t> lines, int idOrFile, int lineOrZero, unsigned int endFile, unsigned int endLine) {
         this->lines = lines;
-        this->triggerId = triggerId;
+        // either triggerLine&file OR triggerId
+        // depends on if its a voice trigger or not
+        if (lineOrZero != 0) {
+            this->triggerLine = lineOrZero;
+            this->triggerFile = idOrFile;
+            this->triggerId = UNLOADED_LINE;
+        } else {
+            this->triggerLine = UNLOADED_LINE;
+            this->triggerFile = UNLOADED_LINE;
+            this->triggerId = idOrFile;
+        }
+        
         this->endFile = endFile;
         this->endLine = endLine;
     }
 
     std::vector<line_t> lines;
-    unsigned int triggerId, endFile, endLine;
+    unsigned int triggerId, triggerLine, triggerFile, endFile, endLine;
 };
 
 std::vector<subtitle_t> parseSubs();

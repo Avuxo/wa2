@@ -19,11 +19,13 @@
 // void pointer-y
 typedef HRESULT(APIENTRY* endscene_t)(LPDIRECT3DDEVICE9 device);
 typedef int(__cdecl* audio_function_t)(int*, int, int, int, int);
+typedef int(__cdecl* voice_audio_t)(int a1, int a2, int arglist, int a4, int a5, int a6, int a7);
 
 
 // original callbacks
 endscene_t originalEndSceneCB = nullptr;
 audio_function_t originalAudioCb = nullptr;
+voice_audio_t originalAudio2Cb = nullptr;
 
 
 // d3d9 vtable and device (captured in hooks)
@@ -54,9 +56,27 @@ int __cdecl audioFunctionHook(int* a1, int audioId, int a3, int a4, int a5) {
     int result = originalAudioCb(a1, audioId, a3, a4, a5);
 
     if (subContext.device) {
-        subContext.checkForTrigger(audioId);
+        subContext.checkForTrigger(audioId, SOUND_EFFECT);
     }
 
+
+    return result;
+}
+
+int __cdecl voiceAudioHook(int a1, int a2, int arglist, int a4, int a5, int a6, int a7) {
+    int result = originalAudio2Cb(a1, a2, arglist, a4, a5, a6, a7);
+
+    // The reality here is that they do a weird check of a few different
+    // values to get the filename but if I read from the global context
+    // version, it appears to always be right.
+    int file = *GameContext::currentFile;
+    
+    // this offset appears to always be 0 but leaving here for posterity's sake
+    int voiceIndex = (*GameContext::voiceOffset) + a4;
+
+    if (subContext.device) {
+        subContext.checkForTrigger(voiceIndex, VOICE);
+    }
 
     return result;
 }
@@ -75,6 +95,12 @@ static void setupHooks() {
         (char*)0x00405940,
         (char*)audioFunctionHook,
         8
+    );
+
+    originalAudio2Cb = (voice_audio_t)installHook(
+        (char*)0x0040ECC0,
+        (char*)voiceAudioHook,
+        6
     );
 }
 

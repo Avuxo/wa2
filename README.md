@@ -16,7 +16,7 @@ In the `White Album 2\todokanai` folder, there needs to be two files, the first 
 
 The trigger for any given sub track is the audio ID of the resource loaded for the background audio track. The debug menu will tell you whatever the most recently loaded audio track is which you can use to write your subs. This will be some 0-4 digit ID.
 
-Please note that <b>ALL</b> subtitles must be ASCII. That means that MS elipse characters, MS single quotes, and MS double quotes must be replaced with `...`, `'`, and `"` respectively.
+Please note that **ALL** subtitles must be ASCII. That means that MS elipse characters, MS single quotes, and MS double quotes must be replaced with `...`, `'`, and `"` respectively.
 
 The carat character `^` is a linebreak, to make it look right, don't use any spaces surrounding it.
 
@@ -24,18 +24,24 @@ Any line that is not `{`, `}`, or inside of a sub block will be ignored and can 
 
 At this time there is no support for multiple subtitles being on screen at the same time, this could be added if it turns out to be necessary.
 
+There are **two** kinds of audio triggers: `VOICE` and `SOUND EFFECT`. They have two different sub formats, but the important thing to know is that the first two numbers are either `[CURRENT FILE] [AUDIO ID]` for **VOICE** or `[AUDIO ID] 0` for **SOUND EFFECT**. The order matters and the `0` for **SOUND EFFECT** is important.
+
+The second two numbers in a trigger are `[END FILE] [END LINE]`. This is a hard-cutoff if you want the subs to have guaranteed to have stopped playing at a certain point.
+
 Subtitles take on the following format:
 
 ```
+A comment marking a line triggered by a SOUND EFFECT
 {
-9805 1002 307
+9805 0 1002 307
 500 5000 This text will be displayed from 500 ms from the^trigger until 5500ms from the start
 5500 7000 the trigger is the 3 numbers at the top: audio trigger^end_file end_line
 7500 8500 There's no hard limit on subtitle length etc.
 }
 
+A comment marking a line triggered by a VOICE LINE
 {
-9703 1003 410
+2024 3020 1003 410
 500 5000 etc etc etc
 5500 7000 more text more text more text^now on a new line.
 }
