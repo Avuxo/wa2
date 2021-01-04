@@ -93,19 +93,22 @@ void SubContext::update() {
 #endif
 
     if (playing) {
-        std::vector<line_t> lines = this->tracks[this->subTrackIndex].lines;
         ULONGLONG ticks = GetTickCount64() - this->startTick;
+        
+        if (this->subTrackIndex < this->tracks.size()) {
+            std::vector<line_t> lines = this->tracks[this->subTrackIndex].lines;
+            
+            if (ticks > lines[this->subIndex].start && ticks < lines[this->subIndex].end) {
+                this->displayCurrentSubtitle();
+            }
 
-        if (ticks > lines[this->subIndex].start && ticks < lines[this->subIndex].end) {
-            this->displayCurrentSubtitle();
-        }
-
-        if (ticks > lines[this->subIndex].end) {
-            if (this->subIndex < lines.size()) {
-                this->subIndex++;
-            } else {
-                if (ticks > lines[this->subIndex].end) {
-                    this->playing = false;
+            if (ticks > lines[this->subIndex].end) {
+                if (this->subIndex < lines.size() - 1) {
+                    this->subIndex++;
+                } else {
+                    if (ticks > lines[this->subIndex].end) {
+                        this->playing = false;
+                    }
                 }
             }
         }
