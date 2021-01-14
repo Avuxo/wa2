@@ -53,6 +53,13 @@ HRESULT TextRenderer::init() {
     return result;
 }
 
+/**
+ * validate char as being in the renderer's page
+ */
+static inline bool isValidChar(char c) {
+    return (((int)c > 0x1f) && ((int)c < 0x7f));
+}
+
 // the x-location of a subtitle is calculated using the center of the screen
 // combined with the length of the line.
 int TextRenderer::calculateXOffset(char* line, int len) {
@@ -69,11 +76,18 @@ int TextRenderer::calculateXOffset(char* line, int len) {
 void TextRenderer::renderText(char* str, int len) {
     RECT rect;
 
+    if (str == nullptr) {
+        MessageBoxA(0, "Attempted to load null string.", 0, 0);
+        return;
+    }
+
     if (sprite && texture) {
         sprite->Begin(D3DXSPRITE_ALPHABLEND);
         this->pos.x = calculateXOffset(str, len);
         unsigned int lineOffset = 0;
         for (int i = 0; i < len; i++) {
+            if (!isValidChar(str[i])) continue;
+
             if (str[i] == LINE_BREAK) {
                 i++;
                 lineOffset += 35;
@@ -98,22 +112,17 @@ void TextRenderer::renderText(char* str, int len) {
     return value is the top adjust for the given char
 */
 int TextRenderer::getTopAdjustedGlyph(char ch, RECT* rect) {
-    // TODO: make this a literal access once the logic is finished
-    //       by filling in the spaces in the font atlas with empty members
-    //       since there's the subset of... ascii characters
-    for (int i = 0; i < FONT_CHAR_COUNT; i++) {
-        if (ch == fontAtlas[i].codePoint) {
-            Character atlasInfo = fontAtlas[i];
+    if (ch == fontAtlas[ch - 0x20].codePoint) {
+        Character atlasInfo = fontAtlas[ch - 0x20];
 
-            rect->left = atlasInfo.x;
-            rect->top = atlasInfo.y;
-            rect->right = atlasInfo.x + atlasInfo.width;
-            rect->bottom = atlasInfo.y + atlasInfo.height;
+        rect->left = atlasInfo.x;
+        rect->top = atlasInfo.y;
+        rect->right = atlasInfo.x + atlasInfo.width;
+        rect->bottom = atlasInfo.y + atlasInfo.height;
 
-            this->lastCharWidth = atlasInfo.width;
+        this->lastCharWidth = atlasInfo.width;
 
-            return atlasInfo.topAdjust;
-        }
+        return atlasInfo.topAdjust;
     }
     return 0;
 }

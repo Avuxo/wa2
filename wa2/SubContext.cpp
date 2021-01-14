@@ -122,7 +122,7 @@ void SubContext::update() {
                 this->displayCurrentSubtitle();
             }
 
-            if (ticks > lines[this->subIndex].end) {
+            if (this->subIndex < lines.size() && ticks > lines[this->subIndex].end) {
                 if (this->subIndex < lines.size() - 1) {
                     this->subIndex++;
                 } else {
