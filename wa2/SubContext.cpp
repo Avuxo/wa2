@@ -156,10 +156,14 @@ void SubContext::drawText(int x, int y, char* text) {
 // debugging
 void SubContext::drawDebugMenu() {
     if (this->playing) {
-        std::vector<line_t> lines = this->tracks[this->subTrackIndex].lines;
-        char currentInfoString[64];
-        sprintf_s(currentInfoString, sizeof(char) * 64, "Start tick: %llu | End tick: %llu", lines[this->subIndex].start, lines[this->subIndex].end);
-        this->drawText(50, 95, currentInfoString);
+        // probably will never /not/ hit just because of the playing check, but
+        // just to be safe...
+        if (this->subTrackIndex < this->tracks.size()) {
+            std::vector<line_t> lines = this->tracks[this->subTrackIndex].lines;
+            char currentInfoString[64];
+            sprintf_s(currentInfoString, sizeof(char) * 64, "Start tick: %llu | End tick: %llu", lines[this->subIndex].start, lines[this->subIndex].end);
+            this->drawText(50, 95, currentInfoString);
+        }
     }
 
     char audioIdString[128];

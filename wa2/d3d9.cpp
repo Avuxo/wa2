@@ -98,6 +98,10 @@ bool tryToGetDevice(void** vtable, size_t size) {
         tries++;
     }
 
+    if (tries == MAX_TRIES) {
+        MessageBoxA(0, "Maximum number of attempts to start plugin patch failed. Please restart game.", "Todokanai Error", 0);
+    }
+
     return result;
 }
 

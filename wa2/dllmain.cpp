@@ -46,7 +46,9 @@ void __stdcall endSceneHook(LPDIRECT3DDEVICE9 originalDevice) {
         subContext = SubContext(device);
     }
 
-    subContext.update();
+    if (subContext.device) {
+        subContext.update();
+    }
 
     originalEndSceneCB(device);
 }

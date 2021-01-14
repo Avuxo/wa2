@@ -77,7 +77,7 @@ void TextRenderer::renderText(char* str, int len) {
     RECT rect;
 
     if (str == nullptr) {
-        MessageBoxA(0, "Attempted to load null string.", 0, 0);
+        MessageBoxA(0, "Attempted to load null string.", "Todokanai Error", 0);
         return;
     }
 
