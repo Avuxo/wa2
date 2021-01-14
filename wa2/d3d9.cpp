@@ -93,8 +93,8 @@ bool tryToGetDevice(void** vtable, size_t size) {
     unsigned int tries = 0;
     bool result = false;
     while (!result && tries < MAX_TRIES) {
+        Sleep(150);
         result = getDXDevice(vtable, size);
-        Sleep(100);
         tries++;
     }
 
