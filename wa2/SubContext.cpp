@@ -126,7 +126,7 @@ void SubContext::update() {
             std::vector<line_t> lines = this->tracks[this->subTrackIndex].lines;
             
             if (ticks > lines[this->subIndex].start && ticks < lines[this->subIndex].end) {
-                //this->displayCurrentSubtitle();
+                this->displayCurrentSubtitle();
             }
 
             if (this->subIndex < lines.size() && ticks > lines[this->subIndex].end) {
