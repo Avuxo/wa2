@@ -75,7 +75,7 @@ void SubContext::checkForTrigger(int audioId, AudioType type) {
     size_t len = tracks.size();
     for (unsigned int i = 0; i < len; i++) {
         // check for end
-        if (playing && tracks[i].endFile == file && tracks[i].endLine == line) {
+        if (playing && tracks[i].endFile == file && tracks[i].endLine <= line) {
             this->playing = false;
             // no breaking condition here to account for the fact that the end of one sub
             // can be the start of another.
@@ -106,7 +106,7 @@ void SubContext::play(int trackIndex, AudioType type) {
 }
 
 void SubContext::update() {
-    if (!this->device) return;
+    if (!this->device) { return; }
 
 #ifdef _TTL_DEBUG
     this->drawDebugMenu();
@@ -119,7 +119,7 @@ void SubContext::update() {
             std::vector<line_t> lines = this->tracks[this->subTrackIndex].lines;
             
             if (ticks > lines[this->subIndex].start && ticks < lines[this->subIndex].end) {
-                this->displayCurrentSubtitle();
+                //this->displayCurrentSubtitle();
             }
 
             if (this->subIndex < lines.size() && ticks > lines[this->subIndex].end) {

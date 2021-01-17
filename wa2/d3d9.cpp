@@ -9,7 +9,7 @@ int width, height;
 BOOL CALLBACK enumWind(HWND handle, LPARAM lp) {
     DWORD pid;
     GetWindowThreadProcessId(handle, &pid);
-    if (GetCurrentProcessId() != pid) return TRUE;
+    if (GetCurrentProcessId() != pid) { return TRUE; }
 
     window = handle;
     return FALSE;
@@ -36,11 +36,11 @@ HWND getWindow() {
 // write the vtable for directx9 into the given pointer.
 // this is a memory leak
 bool getDXDevice(void** vtable, size_t size) {
-    if (!vtable) return false;
+    if (!vtable) { return false; }
 
     IDirect3D9* d3d = Direct3DCreate9(D3D_SDK_VERSION);
 
-    if (!d3d) return false;
+    if (!d3d) { return false; }
     IDirect3DDevice9* dummyDevice = nullptr;
 
     // this is not dx related, but we need to get the base address and this is the most

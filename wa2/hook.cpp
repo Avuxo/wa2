@@ -41,7 +41,7 @@ char* installHook(char* src, char* dest, unsigned int len) {
         PAGE_EXECUTE_READWRITE
     );
 
-    if (!newRegion) return nullptr;
+    if (!newRegion) { return nullptr; }
 
     // insert bytes we have to move to make room for trampoline
     memcpy(newRegion, src, len);
