@@ -14,4 +14,10 @@ namespace Utility {
         This can be retooled to use GetFullPathNameW if that proves necessary.
     */
     LPCSTR getResourcePath(LPCSTR filename);
+    
+    /*
+        Does the todokanai directory exist in the root of the project?
+        This directory contains both patch config and assets.
+    */
+    bool doesTodokanaiDirectoryExist();
 }

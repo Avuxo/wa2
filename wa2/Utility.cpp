@@ -15,3 +15,7 @@ LPCSTR Utility::getResourcePath(LPCSTR filename) {
 
     return buf;
 }
+
+bool Utility::doesTodokanaiDirectoryExist() {
+    return !(GetFileAttributesA(".\\todokanai") == INVALID_FILE_ATTRIBUTES);
+}

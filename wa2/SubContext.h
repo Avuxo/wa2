@@ -45,6 +45,7 @@ struct SubContext {
     SubContext();
     SubContext(LPDIRECT3DDEVICE9 device);
     void checkForTrigger(int audioId, AudioType type);
+    void checkForCutoff();
     void displayCurrentSubtitle();
     void play(int trackIndex, AudioType type);
     void update(); // called every frame by d3d9 hook

@@ -41,7 +41,7 @@ struct subtitle_t {
     }
 
     std::vector<line_t> lines;
-    unsigned int triggerId, triggerLine, triggerFile, endFile, endLine;
+    int triggerId, triggerLine, triggerFile, endFile, endLine;
 };
 
 std::vector<subtitle_t> parseSubs();

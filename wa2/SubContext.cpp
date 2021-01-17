@@ -57,6 +57,18 @@ SubContext::SubContext(LPDIRECT3DDEVICE9 device) {
 #endif
 }
 
+void SubContext::checkForCutoff() {
+    int line = *GameContext::currentLine;
+    int file = *GameContext::currentFile;
+    unsigned int index = this->subTrackIndex;
+    
+    if (index < this->tracks.size()) {
+        if (playing && tracks[index].endFile == file && tracks[index].endLine <= line) {
+            this->playing = false;
+        }
+    }
+}
+
 void SubContext::checkForTrigger(int audioId, AudioType type) {
     int line = *GameContext::currentLine;
     int file = *GameContext::currentFile;
@@ -69,18 +81,13 @@ void SubContext::checkForTrigger(int audioId, AudioType type) {
     this->lastSoundPlayedType = audioTypeStrings[(int)type];
 #endif
 
+    this->checkForCutoff();
+
     // in defense of this lame linear search, this only iterates over each
     // sub _track_, not each line and more importantly, it's only triggered
     // on each new line of dialogue, not every frame.
     size_t len = tracks.size();
     for (unsigned int i = 0; i < len; i++) {
-        // check for end
-        if (playing && tracks[i].endFile == file && tracks[i].endLine <= line) {
-            this->playing = false;
-            // no breaking condition here to account for the fact that the end of one sub
-            // can be the start of another.
-        }
-
         // check for start
         if (type == SOUND_EFFECT) {
             if (!playing && audioId == tracks[i].triggerId) {

@@ -53,7 +53,7 @@ Each line is `[start ms] [duration ms] text until newline`
 
 Although the majority of this patch is dedicated to adding subtitle support to White Album 2's engine, the core is a relatively abstract hooking solution which takes advantage of simple [trampolining](https://en.wikipedia.org/wiki/Trampoline_(computing)) and [DLL proxying](https://kevinalmansa.github.io/application%20security/DLL-Proxying/) (targeting d3d9.dll).
 
-There's a function in `wa2/dllmain.cpp` called `setupHooks()` that installs all of the hooks for the project. It takes 3 arguments: the address of the function to patch, the callback for the hook (see below), and the size (in bytes) that will be overwritten and thus must be reallocated inside of the trampoline. Both of these values can be found pretty quickly using IDA and Cheat Engine in conjunction using `Find out what [...] this address`.
+There's a function in `wa2/GameHooks.cpp` called `setupHooks()` that installs all of the hooks for the project. It takes 3 arguments: the address of the function to patch, the callback for the hook (see below), and the size (in bytes) that will be overwritten and thus must be reallocated inside of the trampoline. Both of these values can be found pretty quickly using IDA and Cheat Engine in conjunction using `Find out what [...] this address`.
 
 As it stands, all of the state is just being stored at the top of the file for simplicity's sake but if this project expands, that might need to be put into a state construct.
 

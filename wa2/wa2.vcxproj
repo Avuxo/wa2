@@ -161,6 +161,7 @@
   <ItemGroup>
     <ClCompile Include="d3d9.cpp" />
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="GameHooks.cpp" />
     <ClCompile Include="hook.cpp" />
     <ClCompile Include="SubContext.cpp" />
     <ClCompile Include="SubParser.cpp" />
@@ -171,6 +172,7 @@
     <ClInclude Include="d3d9.h" />
     <ClInclude Include="font_atlas.h" />
     <ClInclude Include="GameContext.h" />
+    <ClInclude Include="GameHooks.h" />
     <ClInclude Include="hook.h" />
     <ClInclude Include="SubContext.h" />
     <ClInclude Include="SubParser.h" />
