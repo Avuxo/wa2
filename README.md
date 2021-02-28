@@ -26,7 +26,7 @@ At this time there is no support for multiple subtitles being on screen at the s
 
 There are **two** kinds of audio triggers: `VOICE` and `SOUND EFFECT`. They have two different sub formats, but the important thing to know is that the first two numbers are either `[CURRENT FILE] [AUDIO ID]` for **VOICE** or `[AUDIO ID] 0` for **SOUND EFFECT**. The order matters and the `0` for **SOUND EFFECT** is important.
 
-The second two numbers in a trigger are `[END FILE] [END LINE]`. This is a hard-cutoff if you want the subs to have guaranteed to have stopped playing at a certain point.
+The second two numbers in a trigger are `[END FILE] [END LINE]`. This is a hard-cutoff if you want the subs to have guaranteed to have stopped playing at a certain point. These are **script** lines, which are not necessarily aligned with voice lines.
 
 Subtitles take on the following format:
 
