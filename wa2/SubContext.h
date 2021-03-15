@@ -7,7 +7,7 @@
 #include "TextRenderer.h"
 #include "SubParser.h"
 
-enum AudioType {
+enum class AudioType {
     BGM = 0, VOICE = 1, SOUND_EFFECT = 2
 };
 

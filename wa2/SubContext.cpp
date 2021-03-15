@@ -89,12 +89,12 @@ void SubContext::checkForTrigger(int audioId, AudioType type) {
     size_t len = tracks.size();
     for (unsigned int i = 0; i < len; i++) {
         // check for start
-        if (type == SOUND_EFFECT) {
+        if (type == AudioType::SOUND_EFFECT) {
             if (!playing && audioId == tracks[i].triggerId) {
                 this->play(i, type);
                 return;
             }
-        } else if (type == VOICE) {
+        } else if (type == AudioType::VOICE) {
             if (!playing && file == tracks[i].triggerFile && audioId == tracks[i].triggerLine) {
                 this->play(i, type);
                 return;

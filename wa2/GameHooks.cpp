@@ -57,7 +57,7 @@ int __cdecl audioFunctionHook(int *a1, int audioId, int a3, int a4, int a5) {
     int result = originalAudioCb(a1, audioId, a3, a4, a5);
 
     if (subContext.device) {
-        subContext.checkForTrigger(audioId, SOUND_EFFECT);
+        subContext.checkForTrigger(audioId, AudioType::SOUND_EFFECT);
     }
 
 
@@ -76,7 +76,7 @@ int __cdecl voiceAudioHook(int a1, int a2, int arglist, int a4, int a5, int a6, 
     int voiceIndex = (*GameContext::voiceOffset) + a4;
 
     if (subContext.device) {
-        subContext.checkForTrigger(voiceIndex, VOICE);
+        subContext.checkForTrigger(voiceIndex, AudioType::VOICE);
     }
 
     return result;
