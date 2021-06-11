@@ -49,6 +49,23 @@ A comment marking a line triggered by a VOICE LINE
 
 Each line is `[start ms] [duration ms] text until newline`
 
+## FAQ
+**Q**: When I start the game with the subtitle patch present, it's just a black screen.
+
+**A**: You need to install the [D3D9 enduser runtime](https://www.microsoft.com/en-us/download/details.aspx?id=8109). You can also start with Win7 compatibility mode.
+
+**Q**: When I'm skipping around sometimes subtitle timings get messed up.
+
+**A**: This will only happen in a few subtitle cases and it won't affect other sub timings later in the game. This is a known problem that may or may not get fixed in the future, but the core of the issue is: _don't skip around in the game if you want to see the whole story_.
+
+**Q**: This causes a crash on the Japanese EXE.
+
+**A**: This is designed only for the English EXE.
+
+**Q**: This causes a crash when running in WINE.
+
+**A**: There is some weirdness in WINE that I haven't really tracked down but the crash is really rare so my advice is just "**save often**".
+
 ## Adding new functionality
 
 Although the majority of this patch is dedicated to adding subtitle support to White Album 2's engine, the core is a relatively abstract hooking solution which takes advantage of simple [trampolining](https://en.wikipedia.org/wiki/Trampoline_(computing)) and [DLL proxying](https://kevinalmansa.github.io/application%20security/DLL-Proxying/) (targeting d3d9.dll).
@@ -61,7 +78,7 @@ As it stands, all of the state is just being stored at the top of the file for s
 
 If the hook function is to run _before_ the original, it should return _void_ and call the original as the last step with no return being called. If the function is to run _after_ the original, it should return the type of the original function, call the function _first_, store the return value, perform hooked actions, and then finally return the original return value.
 
-The function _must_ take the arguments of the original function and _must_ call into the original. It should not do any returning because when the `ret` instruction is called, a second return in _your_ function will cause the pointer it returns to to be messed up. See both `audioFunctionHook`, and `endSceneHook` for examples of this done right. 
+The function _must_ take the arguments of the original function and _must_ call into the original. It should not do any returning because when the `ret` instruction is called, a second return in _your_ function will cause the pointer it returns to to be messed up. See `GameHooks.cpp` for examples of this done right. 
 
 Also note that [MS calling conventions](https://docs.microsoft.com/en-us/cpp/cpp/calling-conventions?view=msvc-160) must be adhered to for the function you're calling into to make sure the call stack is organized in the manner you expect. It should be pretty easy to tell with a debugger and most disassemblers will outright tell you the full signature (calling convention and all). In the event that a hook function is a member function marked `__thiscall`, `__fastcall` is a nearly identical convention and can be used in its place. The only change is that the first argument must be a `void *self` put before the argument list in the `__thiscall`. 
 
