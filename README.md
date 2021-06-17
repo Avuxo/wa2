@@ -52,7 +52,7 @@ Each line is `[start ms] [duration ms] text until newline`
 ## FAQ
 **Q**: When I start the game with the subtitle patch present, it's just a black screen.
 
-**A**: You need to install the [D3D9 enduser runtime](https://www.microsoft.com/en-us/download/details.aspx?id=8109). You can also start with Win7 compatibility mode.
+**A**: You need to install the [D3D9 enduser runtime](https://www.microsoft.com/en-us/download/details.aspx?id=8109). If that does not work, try the [D3D9 SDK](https://www.microsoft.com/en-us/download/details.aspx?id=6812). Finally, you can also start with Win7 compatibility mode. Each solved this issue on different setups on different setups. Some combination of all 3 got it working for everyone. If worst comes to worst, you can just delete d3d9.dll from the White Album 2 directory and it will start without the subtitle functionality (this is only used for audio-only sections of the game).
 
 **Q**: When I'm skipping around sometimes subtitle timings get messed up.
 
