@@ -66,6 +66,10 @@ Each line is `[start ms] [duration ms] text until newline`
 
 **A**: There is some weirdness in WINE that I haven't really tracked down but the crash is really rare so my advice is just "**save often**".
 
+**Q**: I locked my PC with White Album 2 running and now subtitles don't play.
+
+**A**: This is a known issue that I haven't had time to add handling around. Save and restart your game and it will be fixed.
+
 ## Adding new functionality
 
 Although the majority of this patch is dedicated to adding subtitle support to White Album 2's engine, the core is a relatively abstract hooking solution which takes advantage of simple [trampolining](https://en.wikipedia.org/wiki/Trampoline_(computing)) and [DLL proxying](https://kevinalmansa.github.io/application%20security/DLL-Proxying/) (targeting d3d9.dll).
