@@ -8,9 +8,9 @@ let result = 'class abc : public Abc {\r\n';
 
 for (method of methods) {
     if (typeof method != 'object') {
-        result += `  ${method};\r\n`;
+        result += `  ${method}\r\n`;
     } else {
-        result += `  ${method.returnType} ${method.methodName}(${method.params});\r\n`;
+        result += `  ${method.returnType} WINAPI ${method.methodName}(${method.params});\r\n`;
     }
 }
 

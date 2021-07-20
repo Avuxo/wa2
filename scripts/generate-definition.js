@@ -1,4 +1,6 @@
 // generates actual class definition based on methods.json for wrapper
+// note that the result requires some by-hand massaging because it doesn't handle pointers very well.
+// could be fixed but it also only takes about 3 lines of change by hand.
 
 const { writeFileSync } = require('fs');
 const methods = require('./methods.json');
