@@ -7,27 +7,17 @@
 #pragma comment(lib, "d3d9.lib")
 #pragma comment(lib, "d3dx9.lib")
 
-
 // original callbacks
-endscene_t originalEndSceneCB = nullptr;
 set_line_cb_t originalLineWriteCb = nullptr;
 audio_function_t originalAudioCb = nullptr;
 voice_audio_t originalAudio2Cb = nullptr;
-
-
-// d3d9 vtable and device (captured in hooks)
-void *d3dDevice[119];
-LPDIRECT3DDEVICE9 device;
 
 // main context for subtitling work
 SubContext subContext;
 
 
 // called every frame (entry into the draw loop)
-void __stdcall endSceneHook(LPDIRECT3DDEVICE9 originalDevice) {
-    if (!device) {
-        device = originalDevice;
-    }
+void endScene(LPDIRECT3DDEVICE9 device) {
 
     if (!subContext.device) {
         subContext = SubContext(device);
@@ -36,8 +26,6 @@ void __stdcall endSceneHook(LPDIRECT3DDEVICE9 originalDevice) {
     if (subContext.device) {
         subContext.update();
     }
-
-    originalEndSceneCB(device);
 }
 
 // called for every new line loaded (and loads / quick loads; works with auto/skip)
@@ -82,16 +70,7 @@ int __cdecl voiceAudioHook(int a1, int a2, int arglist, int a4, int a5, int a6, 
     return result;
 }
 
-// obviously this works with a lot of nasty global state here, so it's crucial that this is called AFTER the memory
-// for the d3ddevice is establshed AND the device has already been obtained.
-// I'm pretty sure the order in which hooks are installed doesn't really matter.
-static void setupHooks() {
-    originalEndSceneCB = (endscene_t)installHook(
-        (char *)d3dDevice[42],
-        (char *)endSceneHook,
-        7
-    );
-
+void setupHooks() {
     originalLineWriteCb = (set_line_cb_t)installHook(
         (char *)0x00405180,
         (char *)setLineHook,
@@ -109,10 +88,4 @@ static void setupHooks() {
         (char *)voiceAudioHook,
         6
     );
-}
-
-void initHooks() {
-    if (tryToGetDevice(d3dDevice, sizeof(d3dDevice))) {
-        setupHooks();
-    }
 }

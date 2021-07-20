@@ -8,6 +8,5 @@ typedef int(__cdecl *set_line_cb_t)(signed int);
 typedef int(__cdecl *audio_function_t)(int *, int, int, int, int);
 typedef int(__cdecl *voice_audio_t)(int a1, int a2, int arglist, int a4, int a5, int a6, int a7);
 
-
-void initHooks();
+void endScene(LPDIRECT3DDEVICE9 d3dDevice);
 void setupHooks();
