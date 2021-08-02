@@ -11,6 +11,7 @@
 set_line_cb_t originalLineWriteCb = nullptr;
 audio_function_t originalAudioCb = nullptr;
 voice_audio_t originalAudio2Cb = nullptr;
+video_playback_t videoPlaybackCb = nullptr;
 
 // main context for subtitling work
 SubContext subContext;
@@ -70,6 +71,11 @@ int __cdecl voiceAudioHook(int a1, int a2, int arglist, int a4, int a5, int a6, 
     return result;
 }
 
+int __fastcall videoPlaybackHook(void *_this, LPVOID *ppv, LPCSTR filename, HWND hWnd, int a4) {
+    int result = videoPlaybackCb(_this, ppv, filename, hWnd, a4);
+    return 1;
+}
+
 void setupHooks() {
     originalLineWriteCb = (set_line_cb_t)installHook(
         (char *)0x00405180,
@@ -86,6 +92,12 @@ void setupHooks() {
     originalAudio2Cb = (voice_audio_t)installHook(
         (char *)0x0040ECC0,
         (char *)voiceAudioHook,
+        6
+    );
+
+    videoPlaybackCb = (video_playback_t)installHook(
+        (char *)0x0044BB00,
+        (char *)videoPlaybackHook,
         6
     );
 }
