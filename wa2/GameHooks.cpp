@@ -71,8 +71,12 @@ int __cdecl voiceAudioHook(int a1, int a2, int arglist, int a4, int a5, int a6, 
     return result;
 }
 
+// called when DirectShow is initialized for a new video.
 int __fastcall videoPlaybackHook(void *_this, LPVOID *ppv, LPCSTR filename, HWND hWnd, int a4) {
     int result = videoPlaybackCb(_this, ppv, filename, hWnd, a4);
+    
+    //*GameContext::playingMov = 1;
+    
     return 1;
 }
 
@@ -94,10 +98,11 @@ void setupHooks() {
         (char *)voiceAudioHook,
         6
     );
-
+    /*
     videoPlaybackCb = (video_playback_t)installHook(
         (char *)0x0044BB00,
         (char *)videoPlaybackHook,
         6
     );
+    */
 }

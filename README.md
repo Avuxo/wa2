@@ -24,7 +24,7 @@ Any line that is not `{`, `}`, or inside of a sub block will be ignored and can 
 
 At this time there is no support for multiple subtitles being on screen at the same time, this could be added if it turns out to be necessary.
 
-There are **two** kinds of audio triggers: `VOICE` and `SOUND EFFECT`. They have two different sub formats, but the important thing to know is that the first two numbers are either `[CURRENT FILE] [AUDIO ID]` for **VOICE** or `[AUDIO ID] 0` for **SOUND EFFECT**. The order matters and the `0` for **SOUND EFFECT** is important.
+There are **two** kinds of audio triggers: `VOICE` and `SOUND EFFECT`. They have two different sub formats, but the important thing to know is that the first two numbers are either `[CURRENT FILE] [AUDIO ID]` for **VOICE** or `[AUDIO ID] 0` for **SOUND EFFECT**. The order matters and the `0` for **SOUND EFFECT** is important. If there is a conflict between two sound cues, the `0` _can_ be replaced by the file in which the trigger is supposed to be.
 
 The second two numbers in a trigger are `[END FILE] [END LINE]`. This is a hard-cutoff if you want the subs to have guaranteed to have stopped playing at a certain point. These are **script** lines, which are not necessarily aligned with voice lines.
 
@@ -53,6 +53,7 @@ Each line is `[start ms] [duration ms] text until newline`
 **Q**: When I start the game with the subtitle patch present, it's just a black screen.
 
 **A**: You need to install the [D3D9 enduser runtime](https://www.microsoft.com/en-us/download/details.aspx?id=8109). If that does not work, try the [D3D9 SDK](https://www.microsoft.com/en-us/download/details.aspx?id=6812). Finally, you can also start with Win7 compatibility mode. Each solved this issue on different setups on different setups. Some combination of all 3 got it working for everyone. If worst comes to worst, you can just delete d3d9.dll from the White Album 2 directory and it will start without the subtitle functionality (this is only used for audio-only sections of the game).
+
 
 **Q**: When I'm skipping around sometimes subtitle timings get messed up.
 

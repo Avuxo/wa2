@@ -90,7 +90,10 @@ void SubContext::checkForTrigger(int audioId, AudioType type) {
     for (unsigned int i = 0; i < len; i++) {
         // check for start
         if (type == AudioType::SOUND_EFFECT) {
-            if (!playing && audioId == tracks[i].triggerId) {
+            // sound effect IDs can have 0 as a trigger file unless there is some conflict.
+            // this is for backwards compatibility with old sub scripts.
+            // for an example see the subs in 2516 and 3110.
+            if (!playing && audioId == tracks[i].triggerId && (tracks[i].triggerFile == 0 || file == tracks[i].triggerFile)) {
                 this->play(i, type);
                 return;
             }
