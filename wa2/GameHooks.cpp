@@ -77,8 +77,8 @@ void setupHooks() {
     // to know if hooks have already been installed. As such, I'm using
     // the current file region because it will be overwritten when the game
     // is loaded. magic number chosen at random through a golden witch dice roll
-   if (*GameContext::currentFile == 0xBEA70) { return; }
-   *GameContext::currentFile = 0xBEA70;
+   if (*GameContext::inHScene == 0xBEA70) { return; }
+   *GameContext::inHScene = 0xBEA70;
    
     originalLineWriteCb = (set_line_cb_t)installHook(
         (char *)0x00405180,
